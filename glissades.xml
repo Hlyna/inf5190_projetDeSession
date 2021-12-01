@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<glissades>
+    <glissade>
+        <nom>Aire de glissade ,Don-Bosco</nom>
+        <arrondissement>
+            <nom_arr>Rivière-des-Prairies - Pointe-aux-Trembles</nom_arr>
+            <cle>rdp</cle>
+            <date_maj>2021-10-18 13:45:13</date_maj>
+        </arrondissement>
+        <ouvert>0</ouvert>
+        <deblaye>0</deblaye>
+        <condition>N/A</condition>
+    </glissade>
+    <glissade>
+        <nom>Aire de glissade,François-Vaillancourt</nom>
+        <arrondissement>
+            <nom_arr>Rivière-des-Prairies - Pointe-aux-Trembles</nom_arr>
+            <cle>rdp</cle>
+            <date_maj>2021-10-18 13:45:13</date_maj>
+        </arrondissement>
+        <ouvert>0</ouvert>
+        <deblaye>0</deblaye>
+        <condition>N/A</condition>
+    </glissade>
+    <glissade>
+        <nom>Glissade, Parc Arthur-Therrien</nom>
+        <arrondissement>
+            <nom_arr>Verdun</nom_arr>
+            <cle>ver</cle>
+            <date_maj>2021-11-15 12:18:10</date_maj>
+        </arrondissement>
+        <ouvert>0</ouvert>
+        <deblaye>0</deblaye>
+        <condition>N/A</condition>
+    </glissade>
+    <glissade>
+        <nom>Aire de glissade,Saint-Jean-Baptiste</nom>
+        <arrondissement>
+            <nom_arr>Rivière-des-Prairies - Pointe-aux-Trembles</nom_arr>
+            <cle>rdp</cle>
+            <date_maj>2021-10-18 13:45:13</date_maj>
+        </arrondissement>
+        <ouvert>0</ouvert>
+        <deblaye>0</deblaye>
+        <condition>N/A</condition>
+    </glissade>
+    <glissade>
+        <nom>Aire de glissade,Saint-Joseph</nom>
+        <arrondissement>
+            <nom_arr>Rivière-des-Prairies - Pointe-aux-Trembles</nom_arr>
+            <cle>rdp</cle>
+            <date_maj>2021-10-18 13:45:13</date_maj>
+        </arrondissement>
+        <ouvert>0</ouvert>
+        <deblaye>0</deblaye>
+        <condition>N/A</condition>
+    </glissade>
+</glissades>

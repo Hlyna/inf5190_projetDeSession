@@ -1,4 +1,7 @@
+#!/usr/local/bin/python
+# coding: utf-8
 import tweepy
+
  
 access_token = '1461845283940282370-Z9xKelCs6uZY8oYN8pqiFWMb7dvMz9'
 access_token_secret ='eQN42Qgm3HelRJM83UJProgqS3eZy2gxOLHJeEQ5agbLW'
@@ -18,7 +21,7 @@ def OAuth():
 
 oauth = OAuth()
 api = tweepy.API(oauth)
-api.update_status("Tweet posté pour la démo d'INF5190")
+api.update_status("Best tweet ever")
 
 print('tweet publié')
 
