@@ -1,0 +1,11 @@
+{% extends "default.html" %}
+{% block content %}
+
+
+<form method="POST" action = "/">  
+    <br>
+    <textarea style="height:40px; width: 300px;" type="textarea" aria-describedy = "emailHelp" name="champ-recherche" value={{request.form["champ-recherche"]}}></textarea><br> 
+    <button href="/resultat-recherche" type="submit" class="btn btn-outline-success btn-lg">Recherche</button>
+  </form>
+
+{% endblock %}

@@ -34,6 +34,28 @@
         <condition>N/A</condition>
     </glissade>
     <glissade>
+        <nom>Aire de glissade, Parc Confédération</nom>
+        <arrondissement>
+            <nom_arr>Côte-des-Neiges - Notre-Dame-de-Grâce</nom_arr>
+            <cle>cdn</cle>
+            <date_maj>2021-12-06 11:28:59</date_maj>
+        </arrondissement>
+        <ouvert></ouvert>
+        <deblaye>0</deblaye>
+        <condition>N/A</condition>
+    </glissade>
+    <glissade>
+        <nom>Aire de glissade, Parc Van-Horne</nom>
+        <arrondissement>
+            <nom_arr>Côte-des-Neiges - Notre-Dame-de-Grâce</nom_arr>
+            <cle>cdn</cle>
+            <date_maj>2021-12-06 11:28:59</date_maj>
+        </arrondissement>
+        <ouvert></ouvert>
+        <deblaye>0</deblaye>
+        <condition>N/A</condition>
+    </glissade>
+    <glissade>
         <nom>Aire de glissade,Saint-Jean-Baptiste</nom>
         <arrondissement>
             <nom_arr>Rivière-des-Prairies - Pointe-aux-Trembles</nom_arr>

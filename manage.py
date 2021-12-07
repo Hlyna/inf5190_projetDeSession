@@ -1,11 +1,11 @@
 from datetime import date
 import os
 import xml.etree.ElementTree as ET 
-from app import db, Aquatiques,Arrondissements,Glissades
-import urllib.request, urllib.parse, urllib.error,requests, csv
+from app import db, Aquatiques,Arrondissements,Glissades,Conditions,Patinoires
+import urllib.request, urllib.parse, urllib.error,requests, csv,json
 import xml.etree.ElementTree as ET
 import ssl
-
+								
 
 
 
@@ -34,6 +34,11 @@ def import_files():
     xml_file_patinoire = open('patinoires.xml','wb')
     xml_file_patinoire.write(file_patinoires)
     xml_file_patinoire.close()
+    
+    
+    #Créer les bases de données
+    db.create_all()
+    db.session.commit()
 
 def import_data():
     import_files()
@@ -54,27 +59,27 @@ def import_data():
             long = row[10]
             lat = row[11]
             
-            #Je vérifie que les  ne se répetent pas pour ne rien dupliquer
+            #Je vérifie que les data ne se répetent pas pour ne rien dupliquer
             check_db = db.session.query(Aquatiques).filter_by(id_uev=id_uev,adresse=adresse,coord_x = coord_x, coord_y=coord_y).all()
-
             #Je récupère les informations
             if len(check_db) == 0 :
+                print("je vais ajouter")
                 aquatique = Aquatiques(id_uev = id_uev, type =  type, nom = nom, arrondissement=arrondissement, adresse=adresse, propriete = propriete, gestion = gestion, coord_x = coord_x, coord_y = coord_y, equipement = equipement, long = long, lat = lat)
                 db.session.add(aquatique)
                 #Ajouter ici la maj à minuit
                 db.session.commit()
-                print('Ajout nouveauté !')
+                print('Ajout nouvel aqua-thing !')
             else:
-                #print('existe déjà')
+                print('aqua - existe déjà')
                 pass
     csvfile.close()
 
-    # Pass the path of the xml document 
     
-    # print the root (parent) tag along with its memory location 
+    
     with open ('glissades.xml') as xml_file :
         tree = ET.parse(xml_file) 
         root = tree.getroot() 
+        
 
         for glissade in root : 
             nom = glissade[0].text #Nom
@@ -85,23 +90,80 @@ def import_data():
             deblaye = glissade[3].text #deblaye
             condition = glissade[4].text #condition
 
-            check_db = db.session.query(Glissades).filter_by(nom = nom, ouvert = ouvert, deblaye = deblaye, condition = condition).all()
+            
+            
+            check_db = db.session.query(Arrondissements).filter_by(nom_arr = nom_arr, cle =cle, date_maj=date_maj).all()
             #Je récupère les informations
             if len(check_db) == 0 :
-                arrondissement = Arrondissements(nom_arrondissement = nom_arr, cle =cle, date_maj=date_maj)
+                print("je vais ajouter")
+                arrondissement = Arrondissements(nom_arr = nom_arr, cle =cle, date_maj=date_maj)
+                
                 db.session.add(arrondissement)
-                glissade = Glissades(nom = nom, arrondissement = arrondissement.id ,ouvert = ouvert, deblaye = deblaye, condition = condition)
-                db.session.add(glissade)
-                #Ajouter ici la maj à minuitss
                 db.session.commit()
-                print('Ajout nouveauté !')
+
+            check_db = db.session.query(Glissades).filter_by(nom = nom, arrondissement = nom_arr).all()
+
+            if len(check_db) == 0 :
+                print("je vais ajouter")
+                glissade = Glissades(nom = nom , arrondissement = nom_arr, ouvert = ouvert, deblaye = deblaye, condition = condition)
+                db.session.add(glissade)    #Ajouter ici la maj à minuitss
+                db.session.commit()
+                print('Ajout nouvelle glissade!')
             else:
-                #print('existe déjà')
+                print('Glissade : existe déjà')
                 pass
+
+            #prototypage et conception visuel (dessins/interface à faire)
 
     xml_file.close()
 
-        
+
+
+    with open ('patinoires.xml') as xml_file :
+       tree = ET.parse(xml_file) 
+       root = tree.getroot() 
+
+       for pati in root : 
+            nom_arr = pati[0].text
+            nom_pat = pati[1][0].text
+            print(nom_arr)
+            print(pati[1][0].text)
+
+            check_db = db.session.query(Patinoires).filter_by(nom_arr=nom_arr,nom_pat = nom_pat).all()
+            if len(check_db) == 0 :
+                print("je vais ajouter")
+                patinoires = Patinoires(nom_arr=nom_arr,nom_pat = nom_pat)
+                db.session.add(patinoires)
+                db.session.commit()
+                print('Ajout nouvelle patinoire')
+            else:
+                print('Patinoire : existe déjà')
+                pass
+
+            date_heure = pati[1][1][0].text
+            print(date_heure)
+            i = 1
+            for condition in pati[1][1]:
+
+                date_heure =pati[1][i][0].text
+                ouvert = pati[1][i][1].text
+                deblaye = pati[1][i][2].text
+                arrose = pati[1][i][3].text
+                resurface = pati[1][i][4].text
+
+
+
+                condition = Conditions(id = patinoires.id, date_heure= date_heure,ouvert = ouvert,deblaye =deblaye,arrose=arrose, resurface = resurface)
+                db.session.add(condition)
+                db.session.commit()
+                print('Ajout nouvelle condition !')
+                
+
+            
+    xml_file.close()
+
+
+    
 
 
 

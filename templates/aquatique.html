@@ -1,0 +1,20 @@
+{% extends "default.html" %}
+{% block content %}
+
+
+
+
+{% if error1 %}
+<p style="color: red"> {{error}} </p>
+{% endif %} <br>
+
+{% for inst in installation %}
+      <option value="{{ inst }}">{{ inst }}</option>
+
+    
+{% endfor %}
+
+{% endblock %}
+
+
+
