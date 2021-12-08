@@ -111,7 +111,8 @@ def installation(nom_arrondissement):
     return render_template('installations.html',
     installations_aquatiques = installations_aquatiques,
     installations_glissades = installations_glissades, 
-    installations_patinoires = installations_patinoires
+    installations_patinoires = installations_patinoires,
+    nom_arrondissement = nom_arrondissement
      )
 
 

@@ -22,9 +22,9 @@ class Database:
         aquatiques = cursor.fetchall()
         print("I have ")
         print(aquatiques)
-        cursor.execute("select * from arrondissements where nom_arr = ?",(arrondissement,))
+        cursor.execute("select * from glissades WHERE arrondissement = ? ",(arrondissement,))
         glissades = cursor.fetchall()
-        cursor.execute("select * from patinoires where nom_arr = ?",(arrondissement,))
+        cursor.execute("select * from patinoires WHERE nom_arr = ?",(arrondissement,))
         patinoires = cursor.fetchall()
         if selection == "aquatiques":
             return aquatiques

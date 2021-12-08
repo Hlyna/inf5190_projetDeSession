@@ -2,29 +2,50 @@
 <html>
 <body>
 
-<h2>Make a table based on JSON data.</h2>
+<h2>Les installations disponibles pour l'arrondissement :  {{nom_arrondissement}}.</h2>
+
+<select id="myselect" onchange="change_myselect(this.value)">
+  <option value="">Choose an option:</option>
+  <option value="Aquatiques">Aquatiques</option>
+  <option value="Glissades">Glissades</option>
+  <option value="Patinoires">Patinoires</option>
+</select>
 
 <p id="demo"></p>
 
 <script>
-const dbParam = JSON.stringify({table:"installations",limit:100});
-const xmlhttp = new XMLHttpRequest();
-xmlhttp.onload = function() {
-  var a = {{installations_aquatiques |tojson }};
-  console.log(a[15]);
-  const myObj = JSON.parse(a);
-  console.log(myObj);
-  
-  let text = "<table border='1'>"
-  for (let x in myObj) {
-    text += "<tr><td>" + myObj[x][3] + "</td></tr>";
+function change_myselect(sel) {
+  const dbParam = JSON.stringify({table:sel,limit:100});
+  const xmlhttp = new XMLHttpRequest();
+  var a;
+  var i ;
+  xmlhttp.onload = function() {
+    if(sel == "Aquatiques")  {
+      a = {{installations_aquatiques | tojson }}  ;
+      i = 3;
+    }
+
+    if(sel == "Glissades")  {
+      a = {{installations_glissades | tojson }};
+      i = 1;
+    }
+
+    if(sel == "Patinoires")  {
+      a = {{installations_patinoires | tojson }};
+      i = 0;
+    }
+    myObj = JSON.parse(a);
+    text = "<table border='1'>"
+    for (x in myObj) {
+      text += "<tr><td>" + myObj[x][i] + "</td></tr>";
+    }
+    text += "</table>"    
+    document.getElementById("demo").innerHTML = text;
   }
-  text += "</table>"    
-  document.getElementById("demo").innerHTML = text;
+  xmlhttp.open("POST", "json_demo_html_table.php", true);
+  xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xmlhttp.send("x=" + dbParam);
 }
-xmlhttp.open("POST", "json_demo_html_table.php");
-xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x=" + dbParam);
 </script>
 
 </body>
