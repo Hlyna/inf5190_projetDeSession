@@ -122,8 +122,10 @@ def import_data():
     with open ('patinoires.xml') as xml_file :
        tree = ET.parse(xml_file) 
        root = tree.getroot() 
+       i = 1
 
        for pati in root : 
+            
             nom_arr = pati[0].text
             nom_pat = pati[1][0].text
             print(nom_arr)
@@ -142,7 +144,7 @@ def import_data():
 
             date_heure = pati[1][1][0].text
             print(date_heure)
-            i = 1
+            
             for condition in pati[1][1]:
 
                 date_heure =pati[1][i][0].text
@@ -152,11 +154,12 @@ def import_data():
                 resurface = pati[1][i][4].text
 
 
-
-                condition = Conditions(id = patinoires.id, date_heure= date_heure,ouvert = ouvert,deblaye =deblaye,arrose=arrose, resurface = resurface)
+                condition = Conditions ( id_patinoire = i, date_heure= date_heure,ouvert = ouvert,deblaye =deblaye,arrose=arrose, resurface = resurface)
                 db.session.add(condition)
                 db.session.commit()
                 print('Ajout nouvelle condition !')
+               
+            i = i+1 
                 
 
             

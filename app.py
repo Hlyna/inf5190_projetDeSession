@@ -61,7 +61,7 @@ class Conditions(db.Model):
 class Patinoires(db.Model):
     nom_arr = db.Column(db.String(50))
     nom_pat = db.Column(db.String(50), primary_key=True)
-    condition = db.Column(db.Integer) ,ForeignKey(Conditions.id_patinoire)
+    condition = db.Column(db.Integer, db.ForeignKey(Conditions.id_patinoire), autoincrement =True )
 
 
 
