@@ -24,7 +24,7 @@ class Database:
         print(aquatiques)
         cursor.execute("select * from glissades WHERE arrondissement = ? ",(arrondissement,))
         glissades = cursor.fetchall()
-        cursor.execute("select * from patinoires WHERE nom_arr = ?",(arrondissement,))
+        cursor.execute("select nom_pat from patinoires WHERE nom_arr = ?",(arrondissement,))
         patinoires = cursor.fetchall()
         if selection == "aquatiques":
             return aquatiques
