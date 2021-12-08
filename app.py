@@ -8,6 +8,7 @@ from database import Database
 import json,xmltodict
 
 
+
 app = Flask(__name__, static_url_path="", static_folder="static")
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -21,7 +22,7 @@ class Aquatiques(db.Model):
     id_uev = db.Column(db.String(120), nullable= False)
     type = db.Column(db.String(120), nullable= False)
     nom = db.Column(db.String(120), nullable= False)
-    arrondissement = db.Column(db.Integer, nullable= False)
+    arrondissement = db.Column(db.String(120), nullable= False)
     adresse = db.Column(db.String(120), nullable= False)
     propriete = db.Column(db.String(120), nullable= False)
     gestion = db.Column(db.String(120), nullable= False)
@@ -60,24 +61,8 @@ class Conditions(db.Model):
 
 class Patinoires(db.Model):
     nom_arr = db.Column(db.String(50))
-    nom_pat = db.Column(db.String(50), primary_key=True)
-    condition = db.Column(db.Integer, db.ForeignKey(Conditions.id_patinoire), autoincrement =True )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    nom_pat = db.Column(db.String(50))
+    condition = db.Column(db.Integer, db.ForeignKey(Conditions.id_patinoire), autoincrement =True ,  primary_key=True)
 
 
 def get_db():
@@ -95,7 +80,7 @@ def close_connection(exception):
 
 
 @app.errorhandler(404)
-def page_not_found(error):
+def page_not_found(error): 
     return render_template("404.html"), 404
 
 
@@ -109,36 +94,25 @@ def home():
     return render_template('home.html')
 
 
-
-@app.route('/installations')
-def installations():
-    with open('glissades.xml','r') as myfile:
-        obj = xmltodict.parse(myfile.read())
-        glissade = json.dumps(obj)
-        
-        
-     
-    #print(aquatiques.json())
-    return render_template('aquatiques.html', glissades = glissade )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/api/installations/<nom_arrondissement>')
 def installation(nom_arrondissement):
-    installation = get_db().get_installation(nom_arrondissement)
-    return render_template('aquatique.html', installation=installation)
+    installations_aquatiques = get_db().get_installation(nom_arrondissement,"aquatiques")
+    installations_aquatiques = json.dumps(installations_aquatiques)
+    installations_glissades = get_db().get_installation(nom_arrondissement,"glissades")
+    installations_glissades = json.dumps(installations_glissades)
+    installations_patinoires = get_db().get_installation(nom_arrondissement,"patinoires")
+    installations_patinoires = json.dumps(installations_patinoires)
+
+    print("affiche patinoires: ")
+    print(installations_aquatiques)
+
+
+
+    return render_template('installations.html',
+    installations_aquatiques = installations_aquatiques,
+    installations_glissades = installations_glissades, 
+    installations_patinoires = installations_patinoires
+     )
 
 
 

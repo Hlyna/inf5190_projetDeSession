@@ -16,20 +16,29 @@ class Database:
             self.connection.close()
             
 
-    def get_installations(self):
+    def get_installation(self,arrondissement,selection):
         cursor = self.get_connection().cursor()
-        cursor.execute("select * from aquatiques")
+        cursor.execute("select * from aquatiques where arrondissement = ?",(arrondissement,))
         aquatiques = cursor.fetchall()
-        return aquatiques
+        print("I have ")
+        print(aquatiques)
+        cursor.execute("select * from arrondissements where nom_arr = ?",(arrondissement,))
+        glissades = cursor.fetchall()
+        cursor.execute("select * from patinoires where nom_arr = ?",(arrondissement,))
+        patinoires = cursor.fetchall()
+        if selection == "aquatiques":
+            return aquatiques
+        if selection == "glissades":
+            return glissades
+        if selection == "patinoires":
+            return patinoires
+        return "Aucune table choisie"
 
 
 
-    def get_installation(self, nom_arr):
-        cursor = self.get_connection().cursor()
-        cursor.execute("select * from aquatiques where arrondissement= ?",
-                       (nom_arr,))
-        installation = cursor.fetchall()
-        return installation
+
+
+
 
 
     def get_recherche(self, recherche):

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Make a table based on JSON data.</h2>
+
+<p id="demo"></p>
+
+<script>
+const dbParam = JSON.stringify({table:"installations",limit:100});
+const xmlhttp = new XMLHttpRequest();
+xmlhttp.onload = function() {
+  var a = {{installations_aquatiques |tojson }};
+  console.log(a[15]);
+  const myObj = JSON.parse(a);
+  console.log(myObj);
+  
+  let text = "<table border='1'>"
+  for (let x in myObj) {
+    text += "<tr><td>" + myObj[x][3] + "</td></tr>";
+  }
+  text += "</table>"    
+  document.getElementById("demo").innerHTML = text;
+}
+xmlhttp.open("POST", "json_demo_html_table.php");
+xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xmlhttp.send("x=" + dbParam);
+</script>
+
+</body>
+</html>
