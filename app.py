@@ -3,11 +3,8 @@ from xml.etree.ElementTree import TreeBuilder
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, json, render_template, request, redirect, g, jsonify
 from sqlalchemy.sql.schema import ForeignKey
-import connexion
 from database import Database
 import json
-from flask import Flask
-from flask_mail import Mail, Message
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 
@@ -49,13 +46,13 @@ class Arrondissements(db.Model):
 
 class Glissades(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nom = db.Column(db.String(50), nullable=False)
+    nom = db.Column(db.String(50))
     arrondissement = db.Column(
         db.String(50),
         ForeignKey(Arrondissements.nom_arr)
         )
-    ouvert = db.Column(db.Integer, nullable=True)
-    deblaye = db.Column(db.Integer, nullable=False)
+    ouvert = db.Column(db.Integer)
+    deblaye = db.Column(db.String(20), nullable=True)
     condition = db.Column(db.String(120))
 
 
@@ -79,6 +76,12 @@ class Patinoires(db.Model):
         primary_key=True
         )
 
+class Users(db.Model):
+    id =  db.Column(db.Integer, primary_key=True)
+    utlisateur = db.Column(db.String(25))
+    salt = db.Column(db.String(32))
+    hash = db.Column(db.String(128))
+
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -101,7 +104,7 @@ def page_not_found(error):
 
 @app.route('/doc')
 def doc():
-    render_template("doc.raml")
+    return render_template("documentation.html")
 
 
 @app.route('/')

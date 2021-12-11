@@ -1,10 +1,9 @@
 import atexit
-import manage
+from manage import import_files
 from apscheduler.schedulers.background import BackgroundScheduler
 
-def update():
-    sched = BackgroundScheduler(deamon=True)
-    sched.add_job(manage.import_files(),'cron',hour =0)
-    sched.start()
+sched = BackgroundScheduler(deamon=True)
+sched.add_job(import_files,'cron', hour =12 ,minute='17', timezone='America/Newyork')
+sched.start()
 
-    atexit.register(lambda: sched.shutdown())
+atexit.register(lambda: sched.shutdown())

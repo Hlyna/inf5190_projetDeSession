@@ -18,10 +18,10 @@ def OAuth():
     except Exception as e:
         return None
 
+def publicationt_tweet(msg):
+    oauth = OAuth()
+    api = tweepy.API(oauth)
+    api.update_status(msg)
 
-oauth = OAuth()
-api = tweepy.API(oauth)
-api.update_status("Best tweet ever")
-
-print('tweet publié')
+    print('tweet publié')
 

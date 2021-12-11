@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "npm": "^8.3.0",
+    "raml2html": "^7.4.0"
+  }
+}

@@ -1,11 +1,13 @@
 from datetime import date
 import os
-import xml.etree.ElementTree as ET 
+import xml.etree.ElementTree as ET
+import yaml 
 from app import db, Aquatiques,Arrondissements,Glissades,Conditions,Patinoires
 import urllib.request, urllib.parse, urllib.error,requests, csv,json
 import xml.etree.ElementTree as ET
-import bgscheduler
-
+from twitter import publicationt_tweet
+from gmail import envoi_email
+from yaml import safe_load
 
 
 def import_files():
@@ -13,6 +15,7 @@ def import_files():
     db.session.commit
     
     #importer fichier csv 
+
     req = requests.get("https://data.montreal.ca/dataset/4604afb7-a7c4-4626-a3ca-e136158133f2/resource/cbdca706-569e-4b4a-805d-9af73af03b14/download/piscines.csv")
     url_content = req.content
     csv_file = open('piscines.csv','wb')
@@ -20,7 +23,11 @@ def import_files():
     csv_file.close()
 
     with open('piscines.csv', newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=",",quoting= csv.QUOTE_NONE) #Mettre ici le cas ou on voudrait faire un autre type fichier
+        reader = csv.reader(
+            csvfile, 
+            delimiter=",",
+            quoting= csv.QUOTE_NONE
+            ) 
         for row in reader :
             id_uev =  row[0]
             type = row[1]
@@ -36,16 +43,39 @@ def import_files():
             lat = row[11]
             
             #Je verifie que les data ne se répetent pas pour ne rien dupliquer
-            check_db = db.session.query(Aquatiques).filter_by(id_uev=id_uev,adresse=adresse,coord_x = coord_x, coord_y=coord_y).all()
+
+            check_db = db.session.query(Aquatiques).filter_by(
+                id_uev=id_uev,
+                adresse=adresse,
+                coord_x = coord_x, 
+                coord_y=coord_y
+                ).all()
+            
             #Je récupère les informations
+
             if len(check_db) == 0 :
                 print("je vais ajouter")
-                aquatique = Aquatiques(id_uev = id_uev, type =  type, nom = nom, arrondissement=arrondissement, adresse=adresse, propriete = propriete, gestion = gestion, coord_x = coord_x, coord_y = coord_y, equipement = equipement, long = long, lat = lat)
+                aquatique = Aquatiques(
+                    id_uev = id_uev,
+                    type =  type, 
+                    nom = nom, 
+                    arrondissement = arrondissement,
+                    adresse=adresse, 
+                    propriete = propriete, 
+                    gestion = gestion, 
+                    coord_x = coord_x, 
+                    coord_y = coord_y, 
+                    equipement = equipement, 
+                    long = long, 
+                    lat = lat
+                    )
                 db.session.add(aquatique)
                 db.session.commit()
-                print('Ajout nouvel aqua-thing !')
+                msg = "ajout d'un nouveau parc aquatique : "
+                msg += nom
+                publicationt_tweet(msg)
+                envoi_email(msg)
             else:
-                print('aqua - existe déjà')
                 pass
     csvfile.close()
 
@@ -74,23 +104,50 @@ def import_files():
         deblaye = glissade[3].text 
         condition = glissade[4].text 
 
-        check_db = db.session.query(Arrondissements).filter_by(nom_arr = nom_arr, cle =cle, date_maj=date_maj).all()
+        check_db = db.session.query(Arrondissements).filter_by(nom_arr = nom_arr, 
+        cle =cle, 
+        date_maj=date_maj
+        ).all()
+
         #Je filtre pour ne pas avoir de doublons.
         if len(check_db) == 0 :
             print("je vais ajouter")
-            arrondissement = Arrondissements(nom_arr = nom_arr, cle =cle, date_maj=date_maj)   
+            arrondissement = Arrondissements(
+                nom_arr = nom_arr, 
+                cle = cle, 
+                date_maj = date_maj)   
             db.session.add(arrondissement)
             db.session.commit()
 
-        check_db = db.session.query(Glissades).filter_by(nom = nom, arrondissement = nom_arr).all()
+        check_db = db.session.query(Glissades).filter_by(
+            nom = nom, 
+            arrondissement = nom_arr
+            ).all()
         if len(check_db) == 0 :
-            print("je vais ajouter")
-            glissade = Glissades(nom = nom , arrondissement = nom_arr, ouvert = ouvert, deblaye = deblaye, condition = condition)
+            glissade = Glissades(
+                nom = nom,
+                arrondissement = nom_arr,
+                ouvert = ouvert, 
+                deblaye = deblaye, 
+                condition = condition
+                )
             db.session.add(glissade)    #Ajouter ici la maj à minuitss
             db.session.commit()
-            print('Ajout nouvelle glissade!')
+            msg = "ajout d'une nouvelle glissade : "
+            nom = json.dumps(nom,ensure_ascii=False)
+            msg += nom
+            publicationt_tweet(msg)
+            with open('courrier.yml','r') as f :
+                    try:
+                        courrier = yaml.safe_load(f)
+                        print("je telecharge le fichier")
+                        envoi_email(msg,courrier)
+                    except yaml.YAMLError as exc:
+                        print(exc)
+                        print("arrete ici")
+            envoi_email(msg,courrier)
         else:
-            print('Glissade : existe déjà')
+            pass
 
 
     #importer xml de glissades 
@@ -104,19 +161,20 @@ def import_files():
         nom_arr = pati[0].text
         nom_pat = pati[1][0].text
 
-        check_db = db.session.query(Patinoires).filter_by(nom_arr=nom_arr,nom_pat = nom_pat).all()
+        check_db = db.session.query(Patinoires).filter_by(
+            nom_arr=nom_arr
+            ,nom_pat = nom_pat
+            ).all()
         if len(check_db) == 0 :
-            print("je vais ajouter")
-            patinoires = Patinoires(nom_arr=nom_arr,nom_pat = nom_pat)
+            patinoires = Patinoires(
+                nom_arr=nom_arr,
+                nom_pat = nom_pat
+                )
             db.session.add(patinoires)
             db.session.commit()
-            print('Ajout nouvelle patinoire')
+            print('Ajout d\'une nouvelle patinoire')
         else:
-            print('Patinoire : existe déjà')
             pass
-
-        date_heure = pati[1][1][0].text
-        print(date_heure)
            
         for condition in pati[1][1]:
             date_heure =pati[1][i][0].text
@@ -127,16 +185,23 @@ def import_files():
             id_patinoire = j
             check_db1 = db.session.query(Conditions).filter_by(id_patinoire= id_patinoire, date_heure= date_heure,ouvert = ouvert,deblaye =deblaye,arrose=arrose, resurface = resurface).all()
             if len(check_db1) == 0 :
-                condition = Conditions ( id_patinoire = id_patinoire, date_heure= date_heure,ouvert = ouvert,deblaye =deblaye,arrose=arrose, resurface = resurface)
+                condition = Conditions (id_patinoire = id_patinoire,
+                 date_heure= date_heure,
+                 ouvert = ouvert,
+                 deblaye =deblaye,arrose=arrose, 
+                 resurface = resurface
+                 )
                 db.session.add(condition)
                 db.session.commit()
+                msg = "ajout d'une nouvelle patinoire : "
+                msg += nom_pat
+                publicationt_tweet(msg)
                 
-                print('Ajout nouvelle condition !')
 
             else :
-                print("condition : existe déjà")
-               
+                pass
             i = i+1 
+
                 
 
             
@@ -166,13 +231,6 @@ def import_files():
 
 
 if __name__ == '__main__':
-    #import_files()
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.connect("smtp.example.com",465)
-    #Ensuite, connectez-vous au serveur Gmail
-    server.login("", "")
-    #Le message à envoyer
-    msg = "Hello!" 
-    #Envoyez le mail
-    server.sendmail("hamza.lyna@courrier.uqam.ca", "hamza.lyna@courrier.uqam.ca", msg)
-    server.quit()
+    print("je demarre l'operation")
+    import_files()
+    print("fin de l'opération")
