@@ -18,21 +18,24 @@ class Database:
 
     def get_installation(self,arrondissement,selection):
         cursor = self.get_connection().cursor()
-        cursor.execute("select * from aquatiques where arrondissement = ?",(arrondissement,))
-        aquatiques = cursor.fetchall()
-        print("I have ")
-        print(aquatiques)
-        cursor.execute("select * from glissades WHERE arrondissement = ? ",(arrondissement,))
-        glissades = cursor.fetchall()
-        cursor.execute("select nom_pat from patinoires WHERE nom_arr = ?",(arrondissement,))
-        patinoires = cursor.fetchall()
-        if selection == "aquatiques":
-            return aquatiques
-        if selection == "glissades":
-            return glissades
-        if selection == "patinoires":
-            return patinoires
-        return "Aucune table choisie"
+        cursor = self.get_connection().cursor()
+        if arrondissement == '':
+            return None
+        else:
+            cursor.execute("select * from aquatiques where arrondissement = ?",(arrondissement,))
+            aquatiques = cursor.fetchall()
+            print("I have ")
+            print(aquatiques)
+            cursor.execute("select * from glissades WHERE arrondissement = ? ",(arrondissement,))
+            glissades = cursor.fetchall()
+            cursor.execute("select nom_pat from patinoires WHERE nom_arr = ?",(arrondissement,))
+            patinoires = cursor.fetchall()
+            if selection == "aquatiques":
+                return aquatiques
+            if selection == "glissades":
+                return glissades
+            if selection == "patinoires":
+                return patinoires
 
 
 

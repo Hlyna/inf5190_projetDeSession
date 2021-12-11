@@ -1,11 +1,24 @@
 {% extends "default.html" %}
 {% block content %}
 
+<h1>Je m'informe sur Montréal ! </h1>
+<h2>Bienvenus ! </h2>
+
+<h5>Lancez votre recherche !</h5>
+
+<div>
+  <div align = "right">
+    <img src="/images/recherche.png" class ="img-fluid" alt="image" width="800">
+  </div>
+
+  
+</div>
+
 
 <form method="POST" action = "/">  
-    <br>
-    <textarea style="height:40px; width: 300px;" type="textarea" aria-describedy = "emailHelp" name="champ-recherche" value={{request.form["champ-recherche"]}}></textarea><br> 
-    <button href="/resultat-recherche" type="submit" class="btn btn-outline-success btn-lg">Recherche</button>
-  </form>
+  <br>
+  <textarea style="height:40px; width: 300px;" type="textarea" aria-describedy = "emailHelp" name="champ-recherche" value={{request.form["champ-recherche"]}}></textarea><br> 
+  <button href="/api/installations/{{nom_arrondissement}}" type="submit" class="btn btn-outline-success btn-lg">Recherche</button>
+</form>
 
 {% endblock %}

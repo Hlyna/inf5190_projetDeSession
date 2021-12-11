@@ -1,17 +1,40 @@
-<!DOCTYPE html>
-<html>
-<body>
+{% extends "default.html" %}
+{% block content %}
 
-<h2>Les installations disponibles pour l'arrondissement :  {{nom_arrondissement}}.</h2>
 
-<select id="myselect" onchange="change_myselect(this.value)">
-  <option value="">Choose an option:</option>
-  <option value="Aquatiques">Aquatiques</option>
-  <option value="Glissades">Glissades</option>
-  <option value="Patinoires">Patinoires</option>
-</select>
+<style>
+body{
+  background-color: rgb(255, 241, 195);
+}
+h1{
+  text-align:center;
+  color: rgb(0, 20, 75);
+}
+h3{
+  color: rgb(0, 20, 75);
 
-<p id="demo"></p>
+}
+
+</style>
+
+<h1>Affichage des installations</h1><br><br><br>
+
+<h3>Les installations disponibles pour l'arrondissement :  {{nom_arrondissement}}.</h3><br></br><br>
+
+<div align = "center" >
+<select class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="myselect" onchange="change_myselect(this.value)">
+  <option value="">Choisissez une option </option>
+  <option class = "dropdown-item" value="Aquatiques">Piscines</option>
+  <option class = "dropdown-item" value="Glissades">Glissades</option>
+  <option class = "dropdown-item" value="Patinoires">Patinoires</option>
+</select><br><br>
+</div>
+
+
+<div align = "center">
+  <p id="installations"></p>
+</div>
+
 
 <script>
 function change_myselect(sel) {
@@ -19,10 +42,12 @@ function change_myselect(sel) {
   const xmlhttp = new XMLHttpRequest();
   var a;
   var i ;
+  var entete = '<thead class="thead-dark"> <tr class = "table-primary">  <th scope="col">Nom</th> </tr>  </thead>';
   xmlhttp.onload = function() {
     if(sel == "Aquatiques")  {
       a = {{installations_aquatiques | tojson }}  ;
       i = 3;
+      
     }
 
     if(sel == "Glissades")  {
@@ -34,19 +59,21 @@ function change_myselect(sel) {
       a = {{installations_patinoires | tojson }};
       i = 0;
     }
+
     myObj = JSON.parse(a);
-    text = "<table border='1'>"
+    text = "<table  id='MaTable' class='tableu' border='1'>"
+    text += entete;
     for (x in myObj) {
-      text += "<tr><td>" + myObj[x][i] + "</td></tr>";
+      text += "<tr><td>" + myObj[x][i] ;
+      
+
     }
     text += "</table>"    
-    document.getElementById("demo").innerHTML = text;
+    document.getElementById("installations").innerHTML = text;
   }
   xmlhttp.open("POST", "json_demo_html_table.php", true);
   xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xmlhttp.send("x=" + dbParam);
 }
 </script>
-
-</body>
-</html>
+{% endblock %}

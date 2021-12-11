@@ -1,0 +1,24 @@
+#%RAML 1.0
+---
+title: Projet de session API
+baseUri: http://127.0.0.1:5000/
+version: v1
+
+
+/api/installations:
+  get:
+    description: Recuperer des installations selon le nom.
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              { "root":
+                [
+                  { "id" : ,
+                    "nom": ,
+                    "arrondissement":
+                  }
+                ]
+              }
+              

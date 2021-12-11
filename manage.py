@@ -8,7 +8,6 @@ import bgscheduler
 
 
 
-
 def import_files():
     db.create_all()
     db.session.commit
@@ -131,6 +130,7 @@ def import_files():
                 condition = Conditions ( id_patinoire = id_patinoire, date_heure= date_heure,ouvert = ouvert,deblaye =deblaye,arrose=arrose, resurface = resurface)
                 db.session.add(condition)
                 db.session.commit()
+                
                 print('Ajout nouvelle condition !')
 
             else :
@@ -166,4 +166,13 @@ def import_files():
 
 
 if __name__ == '__main__':
-    import_files()
+    #import_files()
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.connect("smtp.example.com",465)
+    #Ensuite, connectez-vous au serveur Gmail
+    server.login("", "")
+    #Le message à envoyer
+    msg = "Hello!" 
+    #Envoyez le mail
+    server.sendmail("hamza.lyna@courrier.uqam.ca", "hamza.lyna@courrier.uqam.ca", msg)
+    server.quit()
