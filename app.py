@@ -1,10 +1,14 @@
 from logging import debug
 from xml.etree.ElementTree import TreeBuilder
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, json, render_template, request, redirect, g, jsonify
+from flask import Flask, json, render_template, request, redirect, g, jsonify,session,Response
 from sqlalchemy.sql.schema import ForeignKey
 from database import Database
 import json
+from database import Database
+import hashlib
+import uuid
+from functools import wraps
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 
@@ -78,9 +82,11 @@ class Patinoires(db.Model):
 
 class Users(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
-    utlisateur = db.Column(db.String(25))
+    utilisateur = db.Column(db.String(25))
+    email = db.Column(db.String(25))
     salt = db.Column(db.String(32))
     hash = db.Column(db.String(128))
+    arrondissement = db.Column(db.String(50))
 
 
 def get_db():
@@ -136,3 +142,100 @@ def installation(nom_arrondissement):
         installations_patinoires=installations_patinoires,
         nom_arrondissement=nom_arrondissement
         )
+
+
+
+
+@app.route('/session')
+def start_page():
+    username = None
+    if "id" in session:
+        username = get_db().get_session(session["id"])
+    return render_template('connexion.html', username=username)
+
+
+@app.route('/confirmation')
+def confirmation_page():
+    return render_template('confirmation.html')
+
+
+@app.route('/inscription', methods=["GET", "POST"])
+def formulaire_creation():
+    if request.method == "GET":
+        return render_template("inscription.html")
+    else:
+        username = request.form["username"]
+        password = request.form["password"]
+        email = request.form["email"]
+        arrondissement = request.form["arrondissement"]
+        # Vérifier que les champs ne sont pas vides
+        if username == "" or password == "" or email == "" or arrondissement =="":
+            return render_template("inscription.html",
+                                   error="Tous les champs sont obligatoires.")
+
+        # TODO Faire la validation du formulaire
+        salt = uuid.uuid4().hex
+        hashed_password = hashlib.sha512(str(password + salt).encode("utf-8")).hexdigest()
+        db = get_db()
+        db.create_user(username, email, salt, hashed_password, arrondissement)
+
+        return render_template("confirmation.html", arrondissement=arrondissement)
+
+
+@app.route('/connexion', methods=["POST"])
+def log_user():
+    username = request.form["username"]
+    password = request.form["password"]
+    # Vérifier que les champs ne sont pas vides
+    if username == "" or password == "":
+        # TODO Faire la gestion de l'erreur
+        return redirect("/")
+
+    user = get_db().get_user_login_info(username)
+    if user is None:
+        # TODO Faire la gestion de l'erreur
+        return redirect("/")
+
+    salt = user[0]
+    hashed_password = hashlib.sha512(str(password + salt).encode("utf-8")).hexdigest()
+    if hashed_password == user[1]:
+        # Accès autorisé
+        id_session = uuid.uuid4().hex
+        get_db().save_session(id_session, username)
+        session["id"] = id_session
+        return redirect("/")
+    else:
+        # TODO Faire la gestion de l'erreur
+        return redirect("/")
+
+
+def authentication_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not is_authenticated(session):
+            return send_unauthorized()
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.route('/logout')
+@authentication_required
+def logout():
+    id_session = session["id"]
+    session.pop('id', None)
+    get_db().delete_session(id_session)
+    return redirect("/")
+
+
+def is_authenticated(session):
+    # TODO Next-level : Vérifier la session dans la base de données
+    return "id" in session
+
+
+def send_unauthorized():
+    return Response('Could not verify your access level for that URL.\n'
+                    'You have to login with proper credentials.', 401,
+                    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+app.secret_key = "(*&*&322387he738220)(*(*22347657"

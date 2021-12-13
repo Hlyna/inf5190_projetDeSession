@@ -1,0 +1,30 @@
+#%RAML 1.0
+title:  Projet de session API
+version: v1
+baseUri:  http://127.0.0.1:5000/
+protocols: [http]
+mediaType: application/json
+
+/api/installations:
+  get:
+    description: Recuperer des installations selon le nom.
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              { "root":
+                [
+                  { "id" : ,
+                    "nom": ,
+                    "arrondissement":
+                  }
+                ]
+              }
+
+
+/bgScheduler:   
+  description: update tous les jours à minuit
+
+
+

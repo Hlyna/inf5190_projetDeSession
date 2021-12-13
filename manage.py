@@ -1,9 +1,15 @@
 from datetime import date
 import os
 import xml.etree.ElementTree as ET
-import yaml 
-from app import db, Aquatiques,Arrondissements,Glissades,Conditions,Patinoires
-import urllib.request, urllib.parse, urllib.error,requests, csv,json
+import yaml
+from app import db, Aquatiques, Arrondissements
+from app import Glissades, Conditions, Patinoires
+import urllib.request
+import urllib.parse
+import urllib.error
+import requests
+import csv
+import json
 import xml.etree.ElementTree as ET
 from twitter import publicationt_tweet
 from gmail import envoi_email
@@ -13,9 +19,8 @@ from yaml import safe_load
 def import_files():
     db.create_all()
     db.session.commit
-    
-    #importer fichier csv 
 
+    # importer fichier csv
     req = requests.get("https://data.montreal.ca/dataset/4604afb7-a7c4-4626-a3ca-e136158133f2/resource/cbdca706-569e-4b4a-805d-9af73af03b14/download/piscines.csv")
     url_content = req.content
     csv_file = open('piscines.csv','wb')
@@ -82,155 +87,114 @@ def import_files():
 
 
 
-
-
-
-
-
-
-
-
-
-
-    #importer xml de glissades 
+    # importer xml de glissades
     my_url = 'http://www2.ville.montreal.qc.ca/services_citoyens/pdf_transfert/L29_GLISSADE.xml'
     root = ET.parse(urllib.request.urlopen(my_url)).getroot()
-    for glissade in root : 
-        nom = glissade[0].text 
-        nom_arr = glissade[1][0].text 
-        cle = glissade[1][1].text 
-        date_maj = glissade[1][2].text 
-        ouvert = glissade[2].text 
-        deblaye = glissade[3].text 
-        condition = glissade[4].text 
-
-        check_db = db.session.query(Arrondissements).filter_by(nom_arr = nom_arr, 
-        cle =cle, 
-        date_maj=date_maj
-        ).all()
-
-        #Je filtre pour ne pas avoir de doublons.
-        if len(check_db) == 0 :
+    for glissade in root:
+        nom = glissade[0].text
+        nom_arr = glissade[1][0].text
+        cle = glissade[1][1].text
+        date_maj = glissade[1][2].text
+        ouvert = glissade[2].text
+        deblaye = glissade[3].text
+        condition = glissade[4].text
+        check_db = db.session.query(Arrondissements).filter_by(
+            nom_arr=nom_arr,
+            cle=cle,
+            date_maj=date_maj
+            ).all()
+        # Je filtre pour ne pas avoir de doublons.
+        if len(check_db) == 0:
             print("je vais ajouter")
             arrondissement = Arrondissements(
-                nom_arr = nom_arr, 
-                cle = cle, 
-                date_maj = date_maj)   
+                nom_arr=nom_arr,
+                cle=cle,
+                date_maj=date_maj)
             db.session.add(arrondissement)
             db.session.commit()
-
         check_db = db.session.query(Glissades).filter_by(
-            nom = nom, 
-            arrondissement = nom_arr
+            nom=nom,
+            arrondissement=nom_arr
             ).all()
-        if len(check_db) == 0 :
+        if len(check_db) == 0:
             glissade = Glissades(
-                nom = nom,
-                arrondissement = nom_arr,
-                ouvert = ouvert, 
-                deblaye = deblaye, 
-                condition = condition
+                nom=nom,
+                arrondissement=nom_arr,
+                ouvert=ouvert,
+                deblaye=deblaye,
+                condition=condition
                 )
-            db.session.add(glissade)    #Ajouter ici la maj à minuitss
+            # Ajouter ici la maj à minuit
+            db.session.add(glissade)
             db.session.commit()
             msg = "ajout d'une nouvelle glissade : "
-            nom = json.dumps(nom,ensure_ascii=False)
             msg += nom
             publicationt_tweet(msg)
-            with open('courrier.yml','r') as f :
-                    try:
-                        courrier = yaml.safe_load(f)
-                        print("je telecharge le fichier")
-                        envoi_email(msg,courrier)
-                    except yaml.YAMLError as exc:
-                        print(exc)
-                        print("arrete ici")
-            envoi_email(msg,courrier)
+            with open('courrier.yml', 'r') as f:
+                courrier = yaml.safe_load(f)
+        #       print("je telecharge le fichier")
+        #       envoi_email(msg,courrier)
+                envoi_email(msg, courrier)
         else:
             pass
 
-
-    #importer xml de glissades 
+    # importer xml de glissades
     my_url = 'https://data.montreal.ca/dataset/225ac315-49fe-476f-95bd-a1ce1648a98c/resource/5d1859cc-2060-4def-903f-db24408bacd0/download/l29-patinoire.xml'
     root = ET.parse(urllib.request.urlopen(my_url)).getroot()
-
     i = 1
     j = -1
-    for pati in root : 
-        j= j+1
+    for pati in root:
+        j = j+1
         nom_arr = pati[0].text
         nom_pat = pati[1][0].text
 
         check_db = db.session.query(Patinoires).filter_by(
-            nom_arr=nom_arr
-            ,nom_pat = nom_pat
+            nom_arr=nom_arr,
+            nom_pat=nom_pat
             ).all()
-        if len(check_db) == 0 :
+        if len(check_db) == 0:
             patinoires = Patinoires(
                 nom_arr=nom_arr,
-                nom_pat = nom_pat
+                nom_pat=nom_pat
                 )
             db.session.add(patinoires)
             db.session.commit()
             print('Ajout d\'une nouvelle patinoire')
         else:
             pass
-           
+
         for condition in pati[1][1]:
-            date_heure =pati[1][i][0].text
+            date_heure = pati[1][i][0].text
             ouvert = pati[1][i][1].text
             deblaye = pati[1][i][2].text
             arrose = pati[1][i][3].text
             resurface = pati[1][i][4].text
             id_patinoire = j
-            check_db1 = db.session.query(Conditions).filter_by(id_patinoire= id_patinoire, date_heure= date_heure,ouvert = ouvert,deblaye =deblaye,arrose=arrose, resurface = resurface).all()
-            if len(check_db1) == 0 :
-                condition = Conditions (id_patinoire = id_patinoire,
-                 date_heure= date_heure,
-                 ouvert = ouvert,
-                 deblaye =deblaye,arrose=arrose, 
-                 resurface = resurface
-                 )
+            check_db1 = db.session.query(Conditions).filter_by(
+                id_patinoire=id_patinoire,
+                date_heure=date_heure,
+                ouvert=ouvert,
+                deblaye=deblaye,
+                arrose=arrose,
+                resurface=resurface).all()
+            if len(check_db1) == 0:
+                condition = Conditions(
+                    id_patinoire=id_patinoire,
+                    date_heure=date_heure,
+                    ouvert=ouvert,
+                    deblaye=deblaye,
+                    arrose=arrose,
+                    resurface=resurface
+                )
                 db.session.add(condition)
                 db.session.commit()
                 msg = "ajout d'une nouvelle patinoire : "
                 msg += nom_pat
                 publicationt_tweet(msg)
-                
-
-            else :
+            else:
                 pass
-            i = i+1 
-
-                
-
-            
-
-    
-       
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            i = i+1
 
 
 if __name__ == '__main__':
-    print("je demarre l'operation")
     import_files()
-    print("fin de l'opération")
