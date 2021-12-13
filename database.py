@@ -22,13 +22,13 @@ class Database:
         if arrondissement == '':
             return None
         else:
-            cursor.execute("select * from aquatiques where arrondissement = ?",(arrondissement,))
+            cursor.execute("select * from aquatiques where arrondissement = ? order by nom ASC ",(arrondissement,))
             aquatiques = cursor.fetchall()
             print("I have ")
             print(aquatiques)
-            cursor.execute("select * from glissades WHERE arrondissement = ? ",(arrondissement,))
+            cursor.execute("select * from glissades WHERE arrondissement = ? order by nom ASC ",(arrondissement,))
             glissades = cursor.fetchall()
-            cursor.execute("select nom_pat from patinoires WHERE nom_arr = ?",(arrondissement,))
+            cursor.execute("select * from patinoires WHERE nom_arr = ? order by nom_pat ASC",(arrondissement,))
             patinoires = cursor.fetchall()
             if selection == "aquatiques":
                 return aquatiques
@@ -36,6 +36,24 @@ class Database:
                 return glissades
             if selection == "patinoires":
                 return patinoires
+
+    def get_installations(self,selection):
+        cursor = self.get_connection().cursor()
+        cursor = self.get_connection().cursor()
+        cursor.execute("select * from aquatiques order by nom ASC")
+        aquatiques = cursor.fetchall()
+        print("I have ")
+        print(aquatiques)
+        cursor.execute("select * from glissades order by nom ASC")
+        glissades = cursor.fetchall()
+        cursor.execute("select * from patinoires order by nom_pat ASC")
+        patinoires = cursor.fetchall()
+        if selection == "aquatiques":
+            return aquatiques
+        if selection == "glissades":
+            return glissades
+        if selection == "patinoires":
+            return patinoires
 
 
     def create_user(self, username, email, salt, hashed_password,arrondissement):

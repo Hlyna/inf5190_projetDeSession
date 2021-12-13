@@ -2,24 +2,7 @@
 {% block content %}
 
 
-<style>
-body{
-  background-color: rgb(255, 241, 195);
-}
-h1{
-  text-align:center;
-  color: rgb(0, 20, 75);
-}
-h3{
-  color: rgb(0, 20, 75);
-
-}
-
-</style>
-
-<h1>Affichage des installations</h1><br><br><br>
-
-<h3>Les installations disponibles pour l'arrondissement :  {{nom_arrondissement}}.</h3><br></br><br>
+<br><br><br><h3>Affichage de l'ensemble des installations</h3><br><br><br>
 
 <div align = "center" >
 <select class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="myselect" onchange="change_myselect(this.value)">
@@ -41,30 +24,37 @@ function change_myselect(sel) {
   const dbParam = JSON.stringify({table:sel,limit:100});
   const xmlhttp = new XMLHttpRequest();
   var a;
-  var i ;
-  var entete = '<thead class="thead-dark"> <tr class = "table-primary">  <th scope="col">Nom</th> </tr>  </thead>';
+  var i ,j, k;
+  var entete = '<thead class="thead-dark"> <tr class = "table-primary">  <td scope="col">Nom</td>' ;
+  entete += ' <td scope="col">Arrondissement</td> </thead>';  
   xmlhttp.onload = function() {
     if(sel == "Aquatiques")  {
       a = {{installations_aquatiques | tojson }}  ;
       i = 3;
+      j = 4;
       
     }
 
     if(sel == "Glissades")  {
       a = {{installations_glissades | tojson }};
       i = 1;
+      j = 2;
     }
 
     if(sel == "Patinoires")  {
       a = {{installations_patinoires | tojson }};
-      i = 0;
+      i = 1;
+      j = 0;
     }
 
     myObj = JSON.parse(a);
     text = "<table  id='MaTable' class='tableu' border='1'>"
     text += entete;
     for (x in myObj) {
-      text += "<tr><td>" + myObj[x][i] ;
+      text += "<tr><td>" + myObj[x][i] + "</td>";
+      text += "<td>" + myObj[x][j] + "</td>";
+      text += "</tr>";
+
       
 
     }

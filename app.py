@@ -141,7 +141,7 @@ def installation(nom_arrondissement):
         )
     installations_patinoires = json.dumps(installations_patinoires)
     return render_template(
-        'installations.html',
+        'installation.html',
         installations_aquatiques=installations_aquatiques,
         installations_glissades=installations_glissades,
         installations_patinoires=installations_patinoires,
@@ -149,7 +149,26 @@ def installation(nom_arrondissement):
         )
 
 
-
+@app.route('/api/installations')
+def installations():
+    installations_aquatiques = get_db().get_installations(
+        "aquatiques"
+        )
+    installations_aquatiques = json.dumps(installations_aquatiques)
+    installations_glissades = get_db().get_installations(
+        "glissades"
+        )
+    installations_glissades = json.dumps(installations_glissades)
+    installations_patinoires = get_db().get_installations(
+        "patinoires"
+        )
+    installations_patinoires = json.dumps(installations_patinoires)
+    return render_template(
+        'installations.html',
+        installations_aquatiques=installations_aquatiques,
+        installations_glissades=installations_glissades,
+        installations_patinoires=installations_patinoires
+        )
 
 @app.route('/session')
 def start_page():

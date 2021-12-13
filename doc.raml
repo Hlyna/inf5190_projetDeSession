@@ -5,9 +5,13 @@ baseUri:  http://127.0.0.1:5000/
 protocols: [http]
 mediaType: application/json
 
+/bgScheduler:   
+  description: update tous les jours à minuit
+
+
 /api/installations:
   get:
-    description: Recuperer des installations selon le nom.
+    description: Recuperer toutes les installations selon le nom.
     responses:
       200:
         body:
@@ -23,8 +27,24 @@ mediaType: application/json
               }
 
 
-/bgScheduler:   
-  description: update tous les jours à minuit
+/api/installations/<nom_arrondissement>:
+  get:
+    description: Recuperer toutes les installations selon le nom.
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              { "root":
+                [
+                  { "id" : ,
+                    "nom": ,
+                    "arrondissement":
+                  }
+                ]
+              }
+
+
 
 
 /inscription:

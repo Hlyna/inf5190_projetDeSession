@@ -23,18 +23,20 @@ Une boite email a été créée dans le but de réaliser cette tâche "projetdes
 La même informations est publié dans un compte twitter. Le compte twitter a également été créé pour ce projet. L'identifiant est @prj_session5190 et il a été créé avec l'adrese mail utilisé dans la mission B1. À chaque nouvelle installation ajoutée. Un tweet contenant le nom de cette installation est publié dans ce compte là. 
 
 ## C1 -10xp-
-Pour chaque installation, on indique toute l'information connue trié en ordre croissant selon le nom de l'installation à la route ```api/installations
+Pour chaque installation, on indique toute l'information connue trié en ordre croissant selon le nom de l'installation à la route ```api/installations```
 
 
 ## C2 -10xp-
-Les informations des installations se retrouvent toutes dans le fichier ```installations.xml```
+Les informations des installations se retrouvent toutes dans le fichier ```installations.xml```. L'opération est effectuée dans le fichier ```stock_fichiers.py```
 
 
 ## C3 -5xp-
-Les informations des installations se retrouvent toutes dans le fichier ```installations.csv```
+Les informations des installations se retrouvent toutes dans le fichier ```installations.csv```. En lançant la commande ``` python stock_fichiers``` 3 fichiers csv sont créés contenant les informations des installations te sont déposés dans le répertoire csv.
 
 ## E1 -10xp-
-L'application prend les informations se trouvant le fichier ```users.json```, qui est validé par json-schema. Le script python recupère les informations python, et met les informations de l'usager dans la table Utilisateur. Ce service est lancé par le script ```authentification.py``` avec la commande ```python authentification.py```. Il est possivle
+L'application prend les informations se trouvant le fichier ```users.json```, qui est validé par json-schema au travers de la fonction validate dans le script ``` jsonValidate.py ``` . Si le lancement de ```python jsonValidate.json``` ne lance aucune exception, alors le fichier est dans un format valide. 
+
+Le script python recupère les informations python, et met les informations de l'usager dans la table Utilisateur. Ce service est lancé par le script ```authentification.py``` avec la commande ```python authentification.py```. Il est possivle
 
 ## E2 -5xp-
 La route /inscription qui rend la page ```inscription.html``` permet à un utilisateur de se créer un profil. Ces informations sont ajoutées directement dans la base de données. 
