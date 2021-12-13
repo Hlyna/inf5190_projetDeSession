@@ -3,7 +3,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
 
-def envoi_email(msg,courrier):
+
+def envoi_email(msg, courrier):
     source_address = 'projetdesession5190@gmail.com'
     destination_address = json.dumps(courrier['courrier'])
     body = msg

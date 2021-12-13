@@ -1,7 +1,8 @@
 from logging import debug
 from xml.etree.ElementTree import TreeBuilder
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, json, render_template, request, redirect, g, jsonify,session,Response
+from flask import Flask, json, render_template, request
+from flask import redirect, g, jsonify, session, Response
 from sqlalchemy.sql.schema import ForeignKey
 from database import Database
 import json
@@ -80,13 +81,15 @@ class Patinoires(db.Model):
         primary_key=True
         )
 
+
 class Users(db.Model):
-    id =  db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     utilisateur = db.Column(db.String(25))
     email = db.Column(db.String(25))
     salt = db.Column(db.String(32))
     hash = db.Column(db.String(128))
     arrondissement = db.Column(db.String(50))
+
 
 class Sessions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -170,6 +173,7 @@ def installations():
         installations_patinoires=installations_patinoires
         )
 
+
 @app.route('/session')
 def start_page():
     username = None
@@ -193,17 +197,21 @@ def formulaire_creation():
         email = request.form["email"]
         arrondissement = request.form["arrondissement"]
         # Vérifier que les champs ne sont pas vides
-        if username == "" or password == "" or email == "" or arrondissement =="":
-            return render_template("inscription.html",
-                                   error="Tous les champs sont obligatoires.")
+        if username == "" or password == "":
+            if email == "" or arrondissement == "":
+                return render_template(
+                    "inscription.html",
+                    error="Tous les champs sont obligatoires.")
 
         # TODO Faire la validation du formulaire
         salt = uuid.uuid4().hex
-        hashed_password = hashlib.sha512(str(password + salt).encode("utf-8")).hexdigest()
+        hashed_password = hashlib.sha512(
+            str(password + salt).encode("utf-8")).hexdigest()
         db = get_db()
         db.create_user(username, email, salt, hashed_password, arrondissement)
 
-        return render_template("confirmation.html", arrondissement=arrondissement)
+        return render_template(
+            "confirmation.html", arrondissement=arrondissement)
 
 
 @app.route('/login', methods=["POST"])
@@ -221,7 +229,8 @@ def log_user():
         return redirect("/")
 
     salt = user[0]
-    hashed_password = hashlib.sha512(str(password + salt).encode("utf-8")).hexdigest()
+    hashed_password = hashlib.sha512(
+        str(password + salt).encode("utf-8")).hexdigest()
     if hashed_password == user[1]:
         # Accès autorisé
         id_session = uuid.uuid4().hex
