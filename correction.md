@@ -27,7 +27,7 @@ Pour chaque installation, on indique toute l'information connue trié en ordre c
 
 
 ## C2 -10xp-
-Les informations des installations se retrouvent toutes dans le fichier ```installations.xml```. L'opération est effectuée dans le fichier ```stock_fichiers.py```
+Les informations des installations se retrouvent toutes dans le fichier ```installations.xml```. L'opération est effectuée dans le fichier ```stock_fichiers.py```. En lançant la commande ``` python stock_fichiers``` 3 fichiers csv sont créés contenant les informations des installations te sont déposés dans le répertoire xml.
 
 
 ## C3 -5xp-
