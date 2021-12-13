@@ -39,4 +39,4 @@ L'application prend les informations se trouvant le fichier ```users.json```, qu
 Le script python recupère les informations python, et met les informations de l'usager dans la table Utilisateur. Ce service est lancé par le script ```authentification.py``` avec la commande ```python authentification.py```. Il est possivle
 
 ## E2 -5xp-
-La route /inscription qui rend la page ```inscription.html``` permet à un utilisateur de se créer un profil. Ces informations sont ajoutées directement dans la base de données. 
+La route /inscription qui rend la page ```inscription.html``` permet à un utilisateur de se créer un profil. Ces informations sont ajoutées directement dans la base de données dans la table users.

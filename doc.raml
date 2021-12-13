@@ -29,29 +29,23 @@ mediaType: application/json
 
 /api/installations/<nom_arrondissement>:
   get:
-    description: Recuperer toutes les installations selon le nom.
+    description: Recuperer toutes les installations selon le nom d'un arrondissement
     responses:
       200:
         body:
           application/json:
-            example:
-              { "root":
-                [
-                  { "id" : ,
-                    "nom": ,
-                    "arrondissement":
-                  }
-                ]
-              }
-
+            
 
 
 
 /inscription:
+  get:
+    description: Un utilisateur est capable de s'inscrire à la plateforme. Ses informations sont gardées sécuritairement dans la base de données.
+    responses:
+      200:
+        body:
+          application/json:
 
-
-/session:
-
-
+  
 
 
