@@ -1,18 +1,32 @@
 {% extends "default.html" %}
 {% block content %}
+<br><br><br>
   <h1>Création d'un compte</h1>
+  <br><br>
   {% if error %}
     <p style="color:#F00">Tous les champs sont obligatoires. Veuillez recommencer.</p>
   {% endif %}
   <form action="/inscription" method="POST">
-    <label for="champ_username">Nom d'utilisateur</label>&nbsp;<input type="text" id="champ_username" name="username" maxlength="25">
+    <br><br><br>
+    <label for="champ_username"><p>Nom d'utilisateur</p></label>&nbsp;
+    <input type="text" id="champ_username" name="username" maxlength="25">
     <br>
-    <label for="champ_password">Mot de passe</label>&nbsp;<input type="password" id="champ_password" name="password" maxlength="40">
+
+    <label for="champ_password"><p>Mot de passe</p></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="password" id="champ_password" name="password" maxlength="40">
     <br>
-    <label for="champ_email">Courriel</label>&nbsp;<input type="text" id="champ_email" name="email" maxlength="100">
+
+    <label for="champ_email"><p>Courriel</p></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" id="champ_email" name="email" maxlength="100">
     <br>
-    <label for="champ_arrondissement">Arrondissement</label>&nbsp;<input type="text" id="champ_arrondissement" name="arrondissement" maxlength="100">
-    <br>
-    <input type="submit" value="Soumettre">
+
+    <label for="champ_arrondissement"><p>Arrondissement</p></label>&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" id="champ_arrondissement" name="arrondissement" maxlength="100">
+    <br><br><br><br>
+
+    <input class = "btn btn-primary" type="submit" value="Soumettre">
   </form>
 {% endblock %}

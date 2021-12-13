@@ -38,9 +38,6 @@ class Database:
                 return patinoires
 
 
-
-
-
     def create_user(self, username, email, salt, hashed_password,arrondissement):
             connection = self.get_connection()
             connection.execute(("insert into users(utilisateur, email, salt, hash, arrondissement)"

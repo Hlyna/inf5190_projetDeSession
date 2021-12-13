@@ -34,7 +34,7 @@ Les informations des installations se retrouvent toutes dans le fichier ```insta
 Les informations des installations se retrouvent toutes dans le fichier ```installations.csv```
 
 ## E1 -10xp-
-L'application prend les informations se trouvant le fichier authentification.json, qui est validé par json-schema. Le script python recupère les informations python, et met les informations de l'usager dans la table Utilisateur. Ce service est lancé par le script ```authentification.py``` avec la commande ```python authentification.py```. Il est possivle
+L'application prend les informations se trouvant le fichier ```users.json```, qui est validé par json-schema. Le script python recupère les informations python, et met les informations de l'usager dans la table Utilisateur. Ce service est lancé par le script ```authentification.py``` avec la commande ```python authentification.py```. Il est possivle
 
 ## E2 -5xp-
 La route /inscription qui rend la page ```inscription.html``` permet à un utilisateur de se créer un profil. Ces informations sont ajoutées directement dans la base de données. 

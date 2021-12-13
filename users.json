@@ -1,0 +1,17 @@
+{
+  "users": [
+    { "utilisateur": "Steeve",
+      "courriel": "steeve_stevenson@gmail.com",
+      "arrondissement": "Verdun"
+    },
+    { "utilisateur": "Peter",
+      "courriel": "peter_peterson@gmail.com",
+      "arrondissement": "LaSalle"
+    },
+    { "utilisateur": "Mark",
+      "courriel": "mark_markenson@gmail.com",
+      "arrondissement": "LaSalle"
+    }
+    
+  ]
+}

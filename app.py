@@ -88,6 +88,11 @@ class Users(db.Model):
     hash = db.Column(db.String(128))
     arrondissement = db.Column(db.String(50))
 
+class Sessions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_session = db.Column(db.String(50))
+    utilisateur = db.Column(db.String(50))
+
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -182,7 +187,7 @@ def formulaire_creation():
         return render_template("confirmation.html", arrondissement=arrondissement)
 
 
-@app.route('/connexion', methods=["POST"])
+@app.route('/login', methods=["POST"])
 def log_user():
     username = request.form["username"]
     password = request.form["password"]
